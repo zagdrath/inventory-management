@@ -4,7 +4,6 @@
  * root directory of this project.
  */
 
-
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "../lib/prisma";
@@ -15,8 +14,17 @@ export const metadata: Metadata = {
 };
 
 async function getEntries() {
-    const res = prisma.entry.findMany();
+    const res = prisma.entry.findMany({
+
+    });
     return res;
+}
+
+async function getCount() {
+    "use server";
+    return (
+        prisma.entry.count()
+    );
 }
 
 function Entry({ entry }: any) {
@@ -39,7 +47,7 @@ function Entry({ entry }: any) {
             <td>{category}</td>
             <td>{quantity}</td>
             <td><Link href={`/edit/${id}`}>Edit</Link></td>
-            <td><Link href={"/"}>Delete</Link></td>
+            <td><Link href={`/delete/${id}`}>Delete</Link></td>
         </tr>
     );
 }
@@ -53,13 +61,48 @@ export default async function Page() {
             <table className="main-table">
                 <tbody>
                     <tr>
+                        <td align="left">
+                            <form action="">
+                                Show&nbsp;
+                                <select name="show-entries" id="show-entries">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                &nbsp;entries
+                            </form>
+                        </td>
+                        <td align="right">
+                            <form action="">
+                                <select name="sort" id="sort">
+                                    <option value="manufacturer">Manufacturer</option>
+                                    <option value="model">Model</option>
+                                    <option value="description">Description</option>
+                                    <option value="category">Category</option>
+                                    <option value="quantity">Quantity</option>
+                                </select>&nbsp;
+                                <input type="text" />&nbsp;
+                                <button>Search</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><br />
+            <table className="main-table">
+                <thead>
+                    <tr>
                         <th></th>
                         <th>Manufacturer</th>
                         <th>Model</th>
                         <th>Description</th>
                         <th>Category</th>
                         <th>Quantity</th>
+                        <th></th>
+                        <th></th>
                     </tr>
+                </thead>
+                <tbody>
                     {entries?.map((entry) => {
                         return <Entry key={entry.id} entry={entry} />
                     })}
