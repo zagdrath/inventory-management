@@ -4,6 +4,7 @@
  * root directory of this project.
  */
 
+
 import Link from "next/link";
 import Image from "next/image";
 import prisma from "../lib/prisma";
@@ -19,24 +20,26 @@ async function getEntries() {
 }
 
 function Entry({ entry }: any) {
-    const { manufacturer, model, description, category, quantity, image } = entry || {};
+    const { id, manufacturer, model, description, category, quantity, image } = entry || {};
     return (
         <tr>
             <td>
-                {/* <Link href={image}>
+                <Link href={image}>
                     <Image
                         src={image}
                         width={50}
                         height={50}
                         alt="image"
                     />
-                </Link> */}
+                </Link>
             </td>
             <td>{manufacturer}</td>
             <td>{model}</td>
             <td>{description}</td>
             <td>{category}</td>
             <td>{quantity}</td>
+            <td><Link href={`/edit/${id}`}>Edit</Link></td>
+            <td><Link href={"/"}>Delete</Link></td>
         </tr>
     );
 }
@@ -47,7 +50,7 @@ export default async function Page() {
         <div>
             <h2>Inventory</h2>
             <Link href="/add">Add Entry</Link>
-            <table>
+            <table className="main-table">
                 <tbody>
                     <tr>
                         <th></th>

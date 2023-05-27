@@ -4,18 +4,38 @@
  * root directory of this project.
  */
 
-import Back from "../Back";
+import Back from "../../Back";
 import type { Metadata } from "next";
-import prisma from "../../lib/prisma";
+import prisma from "../../../lib/prisma";
 
 export const metadata: Metadata = {
-    title: "Add Entry"
+    title: "Edit Entry"
 };
 
-export default function Page() {
-    async function create(formData: FormData) {
+export default async function Page({ params }: any) {
+    async function getEntries() {
         "use server";
-        await prisma.entry.create({
+        return await prisma.entry.findUnique({
+            where: {
+                id: Number(params.id)
+            },
+            select: {
+                manufacturer: true,
+                model: true,
+                description: true,
+                category: true,
+                quantity: true,
+                image: true
+            }
+        })
+    }
+
+    async function update(formData: FormData) {
+        "use server";
+        await prisma.entry.update({
+            where: {
+                id: Number(params.id)
+            },
             data: {
                 manufacturer: formData.get("manufacturer") as string,
                 model: formData.get("model") as string,
@@ -24,13 +44,15 @@ export default function Page() {
                 quantity: formData.get("quantity") as string,
                 image: formData.get("image") as string
             }
-        });
+        })
     }
+
+    const entry = await getEntries();
 
     return (
         <div>
-            <form action={create}>
-                <h2>Add Entry</h2>
+            <form action={update}>
+                <h2>Edit Entry</h2>
                 <table>
                     <tbody>
                         <tr>
@@ -39,6 +61,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="manufacturer"
+                                    defaultValue={entry.manufacturer}
                                     required
                                 /><br /><br />
                             </td>
@@ -49,6 +72,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="model"
+                                    defaultValue={entry.model}
                                     required
                                 /><br /><br />
                             </td>
@@ -59,6 +83,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="description"
+                                    defaultValue={entry.description}
                                     required
                                 /><br /><br />
                             </td>
@@ -69,6 +94,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="category"
+                                    defaultValue={entry.category}
                                     required
                                 /><br /><br />
                             </td>
@@ -79,6 +105,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="quantity"
+                                    defaultValue={entry.quantity}
                                     required
                                 /><br /><br />
                             </td>
@@ -89,6 +116,7 @@ export default function Page() {
                                 <input
                                     type="text"
                                     name="image"
+                                    defaultValue={entry.image}
                                     required
                                 /><br /><br />
                             </td>
