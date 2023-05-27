@@ -6,10 +6,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import prisma from '../lib/prisma';
 import type { Metadata } from "next";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export const metadata: Metadata = {
     title: "Inventory"
@@ -47,7 +45,8 @@ export default async function Page() {
     const entries = await getEntries();
     return (
         <div>
-            {/* <Link href="/add">Add</Link> */}
+            <h2>Inventory</h2>
+            <Link href="/add">Add Entry</Link>
             <table>
                 <tbody>
                     <tr>
