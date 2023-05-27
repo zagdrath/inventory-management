@@ -16,6 +16,6 @@ model Entry {
   model        String
   description  String
   category     String
-  quantity     Int
+  quantity     String
   image        String
 }

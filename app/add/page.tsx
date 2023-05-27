@@ -4,96 +4,75 @@
  * root directory of this project.
  */
 
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
-import { useRouter } from 'next/navigation';
-import { PrismaClient } from "@prisma/client"
+import prisma from "../../lib/prisma";
 
 export const metadata: Metadata = {
     title: "Add Entry"
 };
 
-export default function Page() {
-    const [manufacturer, setManufacturer] = useState("");
-    const [model, setModel] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [quantity, setQuantity] = useState(0);
-    const [image, setImage] = useState("");
-
-    const router = useRouter();
-
-    const create = async () => {
-        const prisma = new PrismaClient();
-
+export default async function Page() {
+    async function create(formData: FormData) {
+        "use server";
         await prisma.entry.create({
             data: {
-                manufacturer,
-                model,
-                description,
-                category,
-                quantity,
-                image
+                manufacturer: formData.get("manufacturer") as string,
+                model: formData.get("model") as string,
+                description: formData.get("description") as string,
+                category: formData.get("category") as string,
+                quantity: formData.get("quantity") as string,
+                image: formData.get("image") as string
             }
         });
-
-        setManufacturer("");
-        setModel("");
-        setDescription("");
-        setCategory("");
-        setQuantity(0);
-        setImage("");
-
-        router.refresh();
     }
 
     return (
-        <form onSubmit={create}>
-            <h2>Add Entry</h2>
-            <label htmlFor="manufacturer">Manufacturer:</label><br />
-            <input
-                type="text"
-                name="manufacturer"
-                value={manufacturer}
-                onChange={(e) => setManufacturer(e.target.value)}
-            /><br /><br />
-            <label htmlFor="model">Model:</label><br />
-            <input
-                type="text"
-                name="model"
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-            /><br /><br />
-            <label htmlFor="description">Description:</label><br />
-            <input
-                type="text"
-                name="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            /><br /><br />
-            <label htmlFor="category">Category:</label><br />
-            <input
-                type="text"
-                name="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-            /><br /><br />
-            <label htmlFor="quantity">Quantity:</label><br />
-            <input
-                type="number"
-                name="quantity"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.valueAsNumber)}
-            /><br /><br />
-            {/* <label htmlFor="quantity">Image:</label><br />
-            <input
-                type="file"
-                name="image"
-                value={image}
-            /><br /><br /> */}
-            <button type="submit">Add Entry</button>
-        </form>
+        <div>
+            <form action={create}>
+                <h2>Add Entry</h2>
+                <label htmlFor="manufacturer">Manufacturer:</label><br />
+                <input
+                    type="text"
+                    name="manufacturer"
+                /><br /><br />
+                <label htmlFor="model">Model:</label><br />
+                <input
+                    type="text"
+                    name="model"
+                /><br /><br />
+                <label htmlFor="description">Description:</label><br />
+                <input
+                    type="text"
+                    name="description"
+                /><br /><br />
+                <label htmlFor="category">Category:</label><br />
+                <input
+                    type="text"
+                    name="category"
+                /><br /><br />
+                <label htmlFor="quantity">Quantity:</label><br />
+                <input
+                    type="text"
+                    name="quantity"
+                /><br /><br />
+                <label htmlFor="quantity">Image:</label><br />
+                <input
+                    type="text"
+                    name="image"
+                /><br /><br />
+                <button type="submit">Add Entry</button>
+            </form>
+            <br />
+            <Link href={"/"}>
+                <Image
+                    src={"/back.gif"}
+                    height={32}
+                    width={36}
+                    alt="back"
+                />
+            </Link>
+        </div>
     );
 }

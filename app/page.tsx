@@ -4,9 +4,9 @@
  * root directory of this project.
  */
 
-import Link from 'next/link';
-import Image from 'next/image';
-import prisma from '../lib/prisma';
+import Link from "next/link";
+import Image from "next/image";
+import prisma from "../lib/prisma";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -23,14 +23,14 @@ function Entry({ entry }: any) {
     return (
         <tr>
             <td>
-                <Link href={image}>
+                {/* <Link href={image}>
                     <Image
                         src={image}
                         width={50}
                         height={50}
-                        alt=""
+                        alt="image"
                     />
-                </Link>
+                </Link> */}
             </td>
             <td>{manufacturer}</td>
             <td>{model}</td>
